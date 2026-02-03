@@ -115,6 +115,19 @@
                         <span class="font-medium">Categories</span>
                     </a>
 
+                    <!-- Expense Categories -->
+                    <a href="{{ route('admin.expense-categories.index') }}" class="group relative flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 {{ request()->routeIs('admin.expense-categories.*') ? 'bg-gradient-to-r from-indigo-500/20 to-purple-500/10 text-white' : 'text-slate-400 hover:text-white hover:bg-white/5' }}">
+                        @if(request()->routeIs('admin.expense-categories.*'))
+                        <div class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-gradient-to-b from-indigo-400 to-purple-500 rounded-r-full shadow-lg shadow-indigo-500/50"></div>
+                        @endif
+                        <div class="w-10 h-10 rounded-xl {{ request()->routeIs('admin.expense-categories.*') ? 'bg-gradient-to-br from-indigo-500 to-purple-600 shadow-lg shadow-indigo-500/30' : 'bg-slate-800 group-hover:bg-slate-700' }} flex items-center justify-center transition-all duration-300">
+                            <svg class="w-5 h-5 {{ request()->routeIs('admin.expense-categories.*') ? 'text-white' : 'text-slate-400 group-hover:text-sky-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                            </svg>
+                        </div>
+                        <span class="font-medium">Ex Categories</span>
+                    </a>
+
                     <!-- Reports -->
                     <a href="{{ route('admin.reports.index') }}" class="group relative flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 {{ request()->routeIs('admin.reports.*') ? 'bg-gradient-to-r from-indigo-500/20 to-purple-500/10 text-white' : 'text-slate-400 hover:text-white hover:bg-white/5' }}">
                         @if(request()->routeIs('admin.reports.*'))
@@ -243,18 +256,21 @@
                     .flex-1.overflow-y-auto::-webkit-scrollbar-thumb:hover { background: #475569; }
                 </style>
                 
-                <!-- Page Content -->
-                <main class="p-4 lg:p-8">
-                    @yield('content')
-                </main>
+                <!-- Content Wrapper with min-height for sticky footer -->
+                <div class="flex flex-col min-h-full">
+                    <!-- Page Content -->
+                    <main class="flex-1 p-4 lg:p-8">
+                        @yield('content')
+                    </main>
 
-                <!-- Footer -->
-                <footer class="border-t border-slate-700/50 px-4 lg:px-8 py-4">
-                    <div class="flex flex-col sm:flex-row items-center justify-between gap-2 text-sm text-slate-400">
-                        <p>&copy; {{ date('Y') }} ExpenseHub. All rights reserved.</p>
-                        <p>Made with <span class="text-rose-500">♥</span> for better expense management</p>
-                    </div>
-                </footer>
+                    <!-- Footer -->
+                    <footer class="border-t border-slate-700/50 px-4 lg:px-8 py-4 mt-auto">
+                        <div class="flex flex-col sm:flex-row items-center justify-between gap-2 text-sm text-slate-400">
+                            <p>&copy; {{ date('Y') }} ExpenseHub. All rights reserved.</p>
+                            <p>Made with for better expense management</p>
+                        </div>
+                    </footer>
+                </div>
             </div>
         </div>
     </div>
