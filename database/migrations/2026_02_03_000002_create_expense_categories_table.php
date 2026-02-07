@@ -12,13 +12,20 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('expense_categories', function (Blueprint $table) {
-            $table->id();
-            $table->string('type'); // e.g., 'fixed', 'variable'
-            $table->foreignId('category_id')->constrained()->onDelete('cascade');
-            $table->text('description')->nullable();
-            $table->boolean('status')->default(true); // true = active, false = inactive
-            $table->timestamps();
-        });
+    $table->id();
+
+    $table->string('type'); // fixed / variable
+
+    $table->foreignId('category_id')
+          ->references('id')
+          ->on('categories')
+          ->cascadeOnDelete();
+
+    $table->text('description')->nullable();
+    $table->boolean('status')->default(true);
+    $table->timestamps();
+});
+
     }
 
     /**

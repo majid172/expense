@@ -73,8 +73,8 @@ class ExpenseController extends Controller
      */
     public function edit(Expense $expense)
     {
-        // Placeholder for edit view
-        return view('admin.expenses.edit', compact('expense'));
+        $expenseCategories = ExpenseCategory::with('category')->where('status', true)->get();
+        return view('admin.expenses.edit', compact('expense', 'expenseCategories'));
     }
 
     /**
@@ -82,7 +82,41 @@ class ExpenseController extends Controller
      */
     public function update(Request $request, Expense $expense)
     {
-        // Placeholder for update logic
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'expense_category_id' => 'required|exists:expense_categories,id',
+            'amount' => 'required|numeric|min:0',
+            'date' => 'required|date',
+            'description' => 'nullable|string',
+            'receipt' => 'nullable|file|mimes:jpeg,png,pdf|max:10240',
+        ]);
+
+        $status = $expense->status; // Preserve existing status or add logic to change it if needed
+
+        if ($request->hasFile('receipt')) {
+            // Delete old receipt if exists
+            if ($expense->receipt_path) {
+                Storage::disk('public')->delete($expense->receipt_path);
+            }
+            
+            $receiptPath = $request->file('receipt')->store('receipts', 'public');
+            $expense->receipt_path = $receiptPath;
+        }
+
+        $expense->update([
+            'title' => $validated['title'],
+            'expense_category_id' => $validated['expense_category_id'],
+            'amount' => $validated['amount'],
+            'date' => $validated['date'],
+            'description' => $validated['description'],
+            // receipt_path is updated above if a new file is uploaded
+            'is_recurring' => $request->has('is_recurring'),
+            'is_tax_deductible' => $request->has('is_tax_deductible'),
+            'is_billable' => $request->has('is_billable'),
+        ]);
+
+        return redirect()->route('admin.expenses.index')
+            ->with('success', 'Expense updated successfully!');
     }
 
     /**
